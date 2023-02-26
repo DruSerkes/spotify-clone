@@ -8,9 +8,10 @@ function Sidebar() {
       <Image
         src="/Spotify_Logo_RGB_Green.png"
         alt='Spotify'
-        height={50}
-        width={141}
+        height={42}
+        width={140}
         className='mt-2 mb-5 ml-2'
+        priority
       />
       <div className='w-full p-3 space-y-5'>
         <SidebarButton Icon={HomeIcon} text="Home" />
@@ -25,6 +26,10 @@ function Sidebar() {
         <hr className='border-t-[0.1px] w-7/8 mx-auto border-gray-700' />
 
         {/* TODO: Add Playlists */}
+
+        <p className='cursor-pointer hover:text-white'>
+          Playlist Name
+        </p>
       </div>
     </div>
   )
