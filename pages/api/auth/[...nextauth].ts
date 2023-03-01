@@ -31,7 +31,6 @@ export const authOptions: AuthOptions = {
       clientId: process.env.NEXT_PUBLIC_SPOTIFY_ID as string,
       clientSecret: process.env.NEXT_PUBLIC_SPOTIFY_SECRET as string,
       authorization: LOGIN_URL,
-
     }),
   ],
   secret: process.env.JWT_SECRET,

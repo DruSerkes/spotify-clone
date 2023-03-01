@@ -20,7 +20,7 @@ type Props = {
 function Login({ providers }: Props) {
   const handleLogin = (provider: ClientSafeProvider) => {
     console.log({ provider })
-    signIn(provider.id, { callbackUrl: '/', })
+    signIn(provider.id, { callbackUrl: '/' })
   }
   return (
     <div className='min-h-screen flex flex-col justify-center items-center bg-black'>
