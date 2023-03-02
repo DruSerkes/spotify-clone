@@ -35,9 +35,9 @@ function Login({ providers }: Props) {
       {providers && Object.values(providers).map(provider => (
         <div key={provider.name} className="text-center mt-6">
           <button
+            onClick={() => handleLogin(provider) as unknown as React.MouseEventHandler<HTMLButtonElement>}
             className='bg-[#18D860] rounded-lg text-black p-5
           active:bg-black active:text-white'
-            onClick={handleLogin(provider) as unknown as React.MouseEventHandler<HTMLButtonElement>}
           >
             Login with {provider.name}
           </button>

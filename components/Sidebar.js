@@ -1,4 +1,5 @@
-import { HomeIcon, MagnifyingGlassIcon, BuildingLibraryIcon, PlusCircleIcon, HeartIcon } from '@heroicons/react/24/outline'
+import { HomeIcon, MagnifyingGlassIcon, BuildingLibraryIcon, PlusCircleIcon, HeartIcon, ArrowDownOnSquareIcon } from '@heroicons/react/24/outline'
+import { signOut } from 'next-auth/react'
 import Image from 'next/image'
 import { SidebarButton } from './SidebarButton'
 
@@ -14,6 +15,10 @@ function Sidebar() {
         priority
       />
       <div className='w-full p-3 space-y-5'>
+        <button className='flex space-x-3' onClick={() => signOut({ callbackUrl: '/login' })}>
+          <ArrowDownOnSquareIcon className='h-5 w-5' />
+          <span>Logout</span>
+        </button>
         <SidebarButton Icon={HomeIcon} text="Home" />
         <SidebarButton Icon={MagnifyingGlassIcon} text="Search" />
         <SidebarButton Icon={BuildingLibraryIcon} text="Your Library" />
