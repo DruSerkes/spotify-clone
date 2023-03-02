@@ -28,7 +28,7 @@ function Sidebar() {
   }, [playlists, session])
 
   return (
-    <div className='border-r-black w-[17.5%] h-screen bg-black text-gray-400 p-5 overflow-y-scroll scrollbar-hide'>
+    <div className='border-r-black w-[17.5%] h-screen bg-black text-gray-400 p-5'>
       <Image
         src="/Spotify_Logo_RGB_Green.png"
         alt='Spotify'
@@ -37,7 +37,7 @@ function Sidebar() {
         className='mt-2 mb-5 ml-2'
         priority
       />
-      <div className='w-full p-3 space-y-5'>
+      <div className='w-full space-y-5'>
         <button className='flex space-x-3' onClick={() => signOut({ callbackUrl: '/login' })}>
           <ArrowDownOnSquareIcon className='h-5 w-5' />
           <span>Logout</span>
@@ -53,12 +53,14 @@ function Sidebar() {
 
         <hr className='border-t-[0.1px] w-7/8 mx-auto border-gray-700' />
 
-        {/* TODO: Add Playlist click logic */}
-        {playlists && playlists.map(playlist => (
-          <p className='cursor-pointer hover:text-white text-sm' key={playlist.id}>
-            {playlist.name}
-          </p>
-        ))}
+        <section className='h-96 space-y-5 overflow-y-scroll scrollbar-hide'>
+          {/* TODO: Add Playlist click logic */}
+          {playlists && playlists.map(playlist => (
+            <p className='cursor-pointer hover:text-white text-sm' key={playlist.id}>
+              {playlist.name}
+            </p>
+          ))}
+        </section>
       </div>
     </div>
   )
