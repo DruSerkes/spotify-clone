@@ -2,6 +2,7 @@ import NextAuth, { AuthOptions } from "next-auth"
 import SpotifyProvider from "next-auth/providers/spotify"
 import { LOGIN_URL, spotifyApi } from "../../../libs/spotify"
 import { JwtToken } from "../../../types/types";
+import { REFRESH_ACCESS_TOKEN_ERROR } from "../../../vars/errors";
 
 const refreshAccessToken = async (token: JwtToken): Promise<JwtToken> => {
   try {
@@ -20,7 +21,7 @@ const refreshAccessToken = async (token: JwtToken): Promise<JwtToken> => {
     console.log(e);
     return {
       ...token,
-      error: 'RefreshAccessTokenError'
+      error: REFRESH_ACCESS_TOKEN_ERROR
     }
   }
 }
