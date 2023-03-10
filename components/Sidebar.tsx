@@ -2,11 +2,14 @@ import { HomeIcon, MagnifyingGlassIcon, BuildingLibraryIcon, PlusCircleIcon, Hea
 import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
+import { useRecoilState } from 'recoil'
+import { playlistIdState } from '../atoms/playlistAtom'
 import { useSpotify } from '../libs/hooks'
 import { SidebarButton } from './SidebarButton'
 
 function Sidebar() {
   const { data: session } = useSession();
+  const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
   const [playlists, setPlaylists] = useState<SpotifyApi.PlaylistObjectSimplified[]>([]);
   const hasFetchedPlaylists = useRef(false);
   const spotify = useSpotify();
@@ -55,9 +58,8 @@ function Sidebar() {
         <hr className='border-t-[0.1px] w-7/8 mx-auto border-gray-700' />
 
         <section className='h-96 space-y-5 overflow-y-scroll scrollbar-hide'>
-          {/* TODO: Add Playlist click logic */}
           {playlists && playlists.map(playlist => (
-            <p className='cursor-pointer hover:text-white text-sm' key={playlist.id}>
+            <p className={`cursor-pointer hover:text-white text-sm ${playlistId === playlist.id ? 'text-white' : ''}`} key={playlist.id} onClick={() => setPlaylistId(playlist.id)}>
               {playlist.name}
             </p>
           ))}
