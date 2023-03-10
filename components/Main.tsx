@@ -1,7 +1,10 @@
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react"
 import Image from "next/image"
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRecoilState } from "recoil";
+import { playlistIdState, playlistState } from "../atoms/playlistAtom";
+import { useSpotify } from "../libs/hooks";
 
 
 const HEADER_COLORS = [
@@ -15,14 +18,41 @@ const HEADER_COLORS = [
 ];
 
 export const Main = () => {
+  const { data: session } = useSession();
   const [headerBgColor, setHeaderBgColor] = useState<string>();
+  const [playlistId] = useRecoilState(playlistIdState);
+  const [playlist, setPlaylist] = useRecoilState<SpotifyApi.SinglePlaylistResponse | undefined>(playlistState);
+  const spotify = useSpotify();
+  const playlistLengthMs = useMemo(() => playlist?.tracks.items.reduce((acc, cur) => acc + (cur.track?.duration_ms ?? 0), 0), [playlist]);
+  // TODO: clean this up
+  const { seconds, minutes, hours } = useMemo(() => {
+    const seconds = Math.floor((playlistLengthMs ?? 0) / 1000) % 60;
+    const minutes = Math.floor(((playlistLengthMs ?? 0) / 1000 / 60) % 60);
+    const hours = Math.floor(((playlistLengthMs ?? 0) / 1000 / 60 / 60) % 24);
+    return { seconds, minutes, hours }
+  }, [playlistLengthMs]);
 
   useEffect(() => {
     const randomBgColor = HEADER_COLORS[Math.floor(Math.random() * HEADER_COLORS.length)]
     setHeaderBgColor(randomBgColor);
   }, []);
 
-  const { data: session } = useSession();
+  useEffect(() => {
+    const getPlaylist = async () => {
+      if (!spotify.getAccessToken() || !playlistId) return;
+
+      try {
+        const res = await spotify.getPlaylist(playlistId);
+        console.log({ res });
+        setPlaylist(res.body);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (!playlist || playlistId !== playlist.id) getPlaylist();
+  }, [playlist, session, playlistId]);
+
   return (
     <div className="flex-grow h-screen w-[82.5%] overflow-y-scroll scrollbar-hide">
       <header className="absolute top-0 right-0">
@@ -34,8 +64,17 @@ export const Main = () => {
         </div>
       </header>
 
-      <section className={`flex items-end space-x-7 bg-gradient-to-b to-black h-80 ${headerBgColor}`}>
-        <img src={""} alt="Header Background" />
+      <section className={`flex items-center space-x-7 bg-gradient-to-b to-black h-96 ${headerBgColor}`}>
+        {!!playlist && (
+          <>
+            <img src={playlist?.images?.[0]?.url} alt="Header Background" className="h-2/3 w-auto ml-10 mt-5 shadow-slate-800 shadow-2xl" />
+            <div className="text-white space-y-4 flex flex-col justify-end h-2/3 mt-5">
+              <h5>Playlist</h5>
+              <h2 className="text-2xl med:text-3xl lg:text-6xl xl:text-7xl font-bold">{playlist?.name}</h2>
+              <p>{playlist.owner.display_name} &#x2022; {playlist.tracks.items.length}, {!!hours && `${hours} hours`} {!!minutes && `${minutes} min`} {!!seconds && `${seconds} sec`}</p>
+            </div>
+          </>
+        )}
       </section>
 
     </div>
