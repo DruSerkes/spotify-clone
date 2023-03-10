@@ -10,6 +10,7 @@ function Sidebar() {
   const [playlists, setPlaylists] = useState<SpotifyApi.PlaylistObjectSimplified[]>([]);
   const hasFetchedPlaylists = useRef(false);
   const spotify = useSpotify();
+  const handleClickLogout = () => signOut({ callbackUrl: '/login' });
 
   useEffect(() => {
     const getPlaylists = async () => {
@@ -38,7 +39,7 @@ function Sidebar() {
         priority
       />
       <div className='w-full space-y-5'>
-        <button className='flex space-x-3' onClick={() => signOut({ callbackUrl: '/login' })}>
+        <button className='flex space-x-3' onClick={handleClickLogout}>
           <ArrowDownOnSquareIcon className='h-5 w-5' />
           <span>Logout</span>
         </button>

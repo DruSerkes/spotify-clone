@@ -10,7 +10,7 @@ export const useSpotify = () => {
     if (!session?.accessToken) return;
     if (session?.error === REFRESH_ACCESS_TOKEN_ERROR) signIn();
 
-    spotifyApi.setAccessToken(session?.accessToken);
+    spotifyApi.setAccessToken(session.accessToken);
   }, [session])
 
   return spotifyApi;

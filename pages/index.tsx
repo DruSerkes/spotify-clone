@@ -19,7 +19,7 @@ const Home: NextPage = () => {
       </main>
 
       <footer>
-        {/* Player */}
+        {/* TODO: Player */}
       </footer>
     </div>
   )

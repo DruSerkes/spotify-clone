@@ -16,6 +16,7 @@ const refreshAccessToken = async (token: JwtToken): Promise<JwtToken> => {
       refreshToken: refreshedAccessToken.refresh_token ?? token.refreshToken,
       username: token.username,
       expirationMs: Date.now() + refreshedAccessToken.expires_in * 1000, // ONE HOUR FROM NOW
+      error: undefined,
     }
   } catch (e) {
     console.log(e);
@@ -24,7 +25,7 @@ const refreshAccessToken = async (token: JwtToken): Promise<JwtToken> => {
       error: REFRESH_ACCESS_TOKEN_ERROR
     }
   }
-}
+};
 
 export const authOptions: AuthOptions = {
   providers: [
