@@ -32,7 +32,7 @@ function Sidebar() {
   }, [playlists, session])
 
   return (
-    <div className='border-r-black w-[17.5%] h-screen bg-black text-gray-400 p-5'>
+    <div className='border-r-black w-[17.5%] h-screen bg-black text-gray-400 p-5 text-xs lg:text-sm sm:max-w-[12rem] lg:max-w-[15rem] hidden md:block'>
       <Image
         src="/Spotify_Logo_RGB_Green.png"
         alt='Spotify'
@@ -59,7 +59,7 @@ function Sidebar() {
 
         <section className='h-96 space-y-5 overflow-y-scroll scrollbar-hide'>
           {playlists && playlists.map(playlist => (
-            <p className={`cursor-pointer hover:text-white text-sm ${playlistId === playlist.id ? 'text-white' : ''}`} key={playlist.id} onClick={() => setPlaylistId(playlist.id)}>
+            <p className={`cursor-pointer hover:text-white ${playlistId === playlist.id ? 'text-white' : ''}`} key={playlist.id} onClick={() => setPlaylistId(playlist.id)}>
               {playlist.name}
             </p>
           ))}
