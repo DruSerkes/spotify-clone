@@ -56,12 +56,12 @@ export const Main = () => {
 
   return (
     <div className="flex-grow h-screen w-[82.5%] overflow-y-scroll scrollbar-hide text-white">
-      <header className="absolute top-0 right-0">
-        {/* Dropdown */}
-        <div className="bg-black flex space-x-3 items-center opacity-85 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2">
-          <img src={session?.user?.image ?? undefined} alt="user" className="rounded-full w-10 h-10" />
-          <h2>{session?.user?.name}</h2>
-          <ChevronDownIcon className="h-5 w-5" />
+      {/* Dropdown */}
+      <header className="absolute top-4 right-5">
+        <div className="bg-black flex space-x-3 items-center opacity-80 cursor-pointer rounded-full p-[0.1rem] pr-2">
+          <img src={session?.user?.image ?? undefined} alt="user" className="rounded-full w-9 h-9" />
+          <h2 className="font-bold text-sm">{session?.user?.name}</h2>
+          <ChevronDownIcon className="h-4 w-4" fill="white" />
         </div>
       </header>
 
@@ -84,7 +84,7 @@ export const Main = () => {
       </section>
 
       {/* Songs */}
-      <section className="p-8 h-[40%] overflow-y-scroll">
+      <section className="p-8 h-[40%]">
         {playlist && <Songs playlist={playlist} />}
       </section>
 
