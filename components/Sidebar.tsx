@@ -1,5 +1,5 @@
 import { HomeIcon, MagnifyingGlassIcon, BuildingLibraryIcon, PlusCircleIcon, HeartIcon, ArrowDownOnSquareIcon } from '@heroicons/react/24/outline'
-import { signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { useRecoilState } from 'recoil'
@@ -13,7 +13,6 @@ function Sidebar() {
   const [playlists, setPlaylists] = useState<SpotifyApi.PlaylistObjectSimplified[]>([]);
   const hasFetchedPlaylists = useRef(false);
   const spotify = useSpotify();
-  const handleClickLogout = () => signOut({ callbackUrl: '/login' });
 
   useEffect(() => {
     const getPlaylists = async () => {
@@ -42,10 +41,6 @@ function Sidebar() {
         priority
       />
       <div className='w-full space-y-5'>
-        <button className='flex space-x-3' onClick={handleClickLogout}>
-          <ArrowDownOnSquareIcon className='h-5 w-5' />
-          <span>Logout</span>
-        </button>
         <SidebarButton Icon={HomeIcon} text="Home" />
         <SidebarButton Icon={MagnifyingGlassIcon} text="Search" />
         <SidebarButton Icon={BuildingLibraryIcon} text="Your Library" />
