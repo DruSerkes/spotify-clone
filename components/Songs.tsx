@@ -14,8 +14,8 @@ export function Songs({ playlist }: Props) {
           <p>Title</p>
         </div>
         <div className="flex items-center justify-between ml-auto md:ml-0">
-          <p>Album</p>
-          <p>Date Added</p>
+          <p className="hidden md:inline">Album</p>
+          <p className="hidden md:inline">Date Added</p>
           <p><ClockIcon className="h-5 w-5" /></p>
         </div>
       </div>
