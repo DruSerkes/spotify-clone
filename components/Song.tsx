@@ -1,6 +1,9 @@
-import { PlayIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { PauseIcon, PlayIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { currentSongIdState, isSongPlayingState } from "../atoms/songAtom";
 import { msToDuration } from "../libs/helpers";
+import { useSpotify } from "../libs/hooks";
 
 interface Props {
   song: SpotifyApi.PlaylistTrackObject;
@@ -8,7 +11,17 @@ interface Props {
 }
 
 export function Song({ song, order }: Props) {
+  const spotify = useSpotify();
   const [isHovering, setIsHovering] = useState(false);
+  const [currentSongId, setCurrentSongId] = useRecoilState(currentSongIdState);
+  const [isPlaying, setIsPlaying] = useRecoilState(isSongPlayingState);
+  const handleClickPlay = () => setCurrentSongId(song.track?.id ?? '');
+  const handleClickPause = () => spotify.pause();
+
+  useEffect(() => {
+
+  }, [currentSongId]);
+
   return (
     <div
       className="grid grid-cols-2 px-3 py-2 my-1 hover:bg-white hover:bg-opacity-20 rounded text-gray-400"
@@ -16,7 +29,13 @@ export function Song({ song, order }: Props) {
       onMouseLeave={() => setIsHovering(false)}
     >
       <div className="flex items-center space-x-4">
-        <p>{isHovering ? <PlayIcon className="h-4 w-4" fill="white" /> : order}</p>
+        <p>
+          {(currentSongId === song.track?.id && isPlaying)
+            ? <PauseIcon className="h-4 w-4" fill="white" onClick={handleClickPause} />
+            : isHovering
+              ? <PlayIcon className="h-4 w-4" fill="white" onClick={handleClickPlay} />
+              : order}
+        </p>
         <img src={song.track?.album.images?.[0].url} className={`h-10 w-10 inline-block`} />
 
         <div>
