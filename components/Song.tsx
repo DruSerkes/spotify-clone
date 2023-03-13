@@ -1,9 +1,11 @@
 import { PauseIcon, PlayIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
+import { apiErrorMessage } from "../atoms/errorAtom";
 import { currentSongIdState, isSongPlayingState } from "../atoms/songAtom";
 import { msToDuration } from "../libs/helpers";
 import { useSpotify } from "../libs/hooks";
+import { PREMIUM_REQUIRED } from "../vars/errors";
 
 interface Props {
   song: SpotifyApi.PlaylistTrackObject;
@@ -15,12 +17,29 @@ export function Song({ song, order }: Props) {
   const [isHovering, setIsHovering] = useState(false);
   const [currentSongId, setCurrentSongId] = useRecoilState(currentSongIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isSongPlayingState);
-  const handleClickPlay = () => setCurrentSongId(song.track?.id ?? '');
-  const handleClickPause = () => spotify.pause();
+  const [_, setErrorMessage] = useRecoilState(apiErrorMessage);
 
-  useEffect(() => {
+  const handleClickPause = () => {
+    spotify.pause();
+    setIsPlaying(false);
+  };
 
-  }, [currentSongId]);
+  const handleClickPlay = useCallback(async () => {
+    if (!song.track) return;
+
+    try {
+      await spotify.play({ uris: [song.track.uri] });
+      setCurrentSongId(song.track?.id ?? '');
+      setIsPlaying(true);
+    } catch (e: any) {
+      console.log(e);
+      if (e?.body?.error?.reason === PREMIUM_REQUIRED) return setErrorMessage('Spotify Premium is required to perform that command')
+
+      setErrorMessage('Something went wrong. Please refresh and try again');
+    }
+  }, [song]);
+
+  if (song.track?.id === currentSongId) console.log({ song })
 
   return (
     <div
@@ -32,7 +51,7 @@ export function Song({ song, order }: Props) {
         <p>
           {(currentSongId === song.track?.id && isPlaying)
             ? <PauseIcon className="h-4 w-4" fill="white" onClick={handleClickPause} />
-            : isHovering
+            : isHovering || (currentSongId === song.track?.id && !isPlaying)
               ? <PlayIcon className="h-4 w-4" fill="white" onClick={handleClickPlay} />
               : order}
         </p>
@@ -41,7 +60,7 @@ export function Song({ song, order }: Props) {
         <div>
           <p className="w-36 lg:w-44 truncate cursor-pointer hover:underline text-white">{song.track?.name}</p>
           <p className={`w-36 lg:w-44 text-sm truncate ${isHovering ? 'text-white' : ''}`}>
-            {song.track?.artists.map((artist, i) => <>{i > 0 ? ', ' : ''}<span key={artist.id} id={artist.id} className="cursor-pointer hover:underline">{artist.name}</span></>)}
+            {song.track?.artists.map((artist, i) => <span key={artist.id}>{i > 0 ? ', ' : ''}<span id={artist.id} className="cursor-pointer hover:underline">{artist.name}</span></span>)}
           </p>
         </div>
       </div>

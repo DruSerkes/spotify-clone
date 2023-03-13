@@ -39,7 +39,7 @@ function Login({ providers }: Props) {
           <button
             onClick={() => handleLogin(provider) as unknown as React.MouseEventHandler<HTMLButtonElement>}
             className='bg-[#18D860] rounded-lg text-black p-5
-          active:bg-black active:text-white'
+                      active:bg-black active:text-white'
           >
             Login with {provider.name}
           </button>

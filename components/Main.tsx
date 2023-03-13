@@ -1,11 +1,12 @@
 import { useSession } from "next-auth/react"
 import { useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
+import { apiErrorMessage } from "../atoms/errorAtom";
 import { playlistIdState, playlistState } from "../atoms/playlistAtom";
 import { useSpotify } from "../libs/hooks";
+import { ErrorModal } from "./ErrorModal";
 import { HeaderDropdown } from "./HeaderDropdown";
 import { Songs } from "./Songs";
-
 
 const HEADER_COLORS = [
   "from-red-600",
@@ -23,8 +24,9 @@ export const Main = () => {
   const [playlistId] = useRecoilState(playlistIdState);
   const [playlist, setPlaylist] = useRecoilState<SpotifyApi.SinglePlaylistResponse | undefined>(playlistState);
   const spotify = useSpotify();
+  const [error, setError] = useRecoilState(apiErrorMessage);
+  const clearError = () => setError("");
   const playlistLengthMs = useMemo(() => playlist?.tracks.items.reduce((acc, cur) => acc + (cur.track?.duration_ms ?? 0), 0), [playlist]);
-  // TODO: clean this up
   const { seconds, minutes, hours } = useMemo(() => {
     const seconds = Math.floor((playlistLengthMs ?? 0) / 1000) % 60;
     const minutes = Math.floor(((playlistLengthMs ?? 0) / 1000 / 60) % 60);
@@ -79,6 +81,7 @@ export const Main = () => {
         {playlist && <Songs playlist={playlist} />}
       </section>
 
+      {!!error && <ErrorModal error={error} closeModal={clearError} />}
     </div>
   )
 }
