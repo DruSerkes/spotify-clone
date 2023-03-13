@@ -3,6 +3,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 // import Image from 'next/image'
 import { Main } from '../components/Main';
+import { NowPlayingBar } from '../components/NowPlayingBar';
 import Sidebar from '../components/Sidebar';
 
 const Home: NextPage = () => {
@@ -18,8 +19,8 @@ const Home: NextPage = () => {
         <Main />
       </main>
 
-      <footer>
-        {/* TODO: Player */}
+      <footer className="fixed bottom-0 w-full h-24 hidden md:block bg-[rgb(24,24,24)] border-t-[1px] border-[#282828]">
+        <NowPlayingBar />
       </footer>
     </div>
   )

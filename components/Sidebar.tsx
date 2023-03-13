@@ -52,7 +52,7 @@ function Sidebar() {
 
         <hr className='border-t-[0.1px] w-7/8 mx-auto border-gray-700' />
 
-        <section className='h-96 space-y-5 overflow-y-scroll scrollbar-hide'>
+        <section className='h-[400px] space-y-5 overflow-y-scroll scrollbar-hide'>
           {playlists && playlists.map(playlist => (
             <p className={`cursor-pointer hover:text-white ${playlistId === playlist.id ? 'text-white' : ''}`} key={playlist.id} onClick={() => setPlaylistId(playlist.id)}>
               {playlist.name}

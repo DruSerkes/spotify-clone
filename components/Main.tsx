@@ -77,7 +77,7 @@ export const Main = () => {
         )}
       </section>
 
-      <section className="p-8 h-[40%]">
+      <section className="p-8 min-h-[50%]">
         {playlist && <Songs playlist={playlist} />}
       </section>
 

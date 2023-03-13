@@ -9,3 +9,8 @@ export const isSongPlayingState = atom({
   key: 'isSongPlayingState',
   default: false
 });
+
+export const currentSongState = atom({
+  key: 'currentSongState',
+  default: null as SpotifyApi.CurrentlyPlayingResponse | null
+});
