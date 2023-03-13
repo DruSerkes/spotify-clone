@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/react';
 import React, { useEffect } from 'react'
 import { useRecoilState } from 'recoil';
 import { currentSongIdState, currentSongState } from '../atoms/songAtom';
@@ -5,6 +6,7 @@ import { useSpotify } from '../libs/hooks'
 
 export function NowPlayingBar() {
   const spotify = useSpotify();
+  const { data: session } = useSession();
   const [currentSong, setCurrentSong] = useRecoilState(currentSongState);
   const [currentSongId, setCurrentSongId] = useRecoilState(currentSongIdState);
 
@@ -13,17 +15,17 @@ export function NowPlayingBar() {
       if (!spotify.getAccessToken()) return;
 
       try {
-        const currentlyPlayingTrack = await spotify.getMyCurrentPlayingTrack();
-        console.log({ currentlyPlayingTrack });
-        setCurrentSong(currentlyPlayingTrack.body);
-        setCurrentSongId(currentlyPlayingTrack.body.item?.id ?? '');
+        const res = await spotify.getMyCurrentPlayingTrack();
+        console.log({ res });
+        setCurrentSong(res.body);
+        setCurrentSongId(res.body.item?.id ?? '');
       } catch (e) {
         console.log(e);
       }
     };
 
     if (!currentSong) getCurrentSong();
-  }, [currentSong, spotify]);
+  }, [currentSong, spotify, session]);
 
   return (
     <div className='w-full h-full items-center px-5 grid grid-cols-3 text-white text-sm'>

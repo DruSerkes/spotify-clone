@@ -45,7 +45,6 @@ export const Main = () => {
 
       try {
         const res = await spotify.getPlaylist(playlistId);
-        console.log({ res });
         setPlaylist(res.body);
       } catch (error) {
         console.log(error);
