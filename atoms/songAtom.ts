@@ -12,5 +12,10 @@ export const isSongPlayingState = atom({
 
 export const currentSongState = atom({
   key: 'currentSongState',
-  default: null as SpotifyApi.CurrentlyPlayingResponse | null
+  default: null as SpotifyApi.TrackObjectFull | null
+});
+
+export const lastSongState = atom({
+  key: 'lastSongState',
+  default: null as SpotifyApi.TrackObjectFull | null
 });
