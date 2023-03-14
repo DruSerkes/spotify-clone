@@ -18,7 +18,7 @@ export function HeaderDropdown() {
           : <ChevronDownIcon className="h-4 w-4" fill="white" onClick={toggleIsOpen} />}
       </div>
       {isOpen && (
-        <div className='absolute top-11 right-1 rounded w-52 h-72 bg-gray-800 bg-opacity-90 p-1'>
+        <div className='absolute top-11 right-1 rounded w-52 h-auto bg-gray-800 bg-opacity-90 p-1'>
           <p className='rounded p-3 hover:cursor-pointer hover:bg-white hover:bg-opacity-25' onClick={handleLogout}>Log out</p>
         </div>
       )}
