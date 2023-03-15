@@ -1,7 +1,7 @@
 import { useSession } from 'next-auth/react';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil';
-import { currentSongIdState, currentSongState, lastSongState } from '../atoms/songAtom';
+import { currentSongIdState, currentSongState, lastSongState, isSongPlayingState } from '../atoms/songAtom';
 import { useSpotify } from '../libs/hooks'
 import { CurrentlyPlaying } from './CurrentlyPlaying';
 
@@ -10,7 +10,9 @@ export function NowPlayingBar() {
   const { data: session } = useSession();
   const [currentSong, setCurrentSong] = useRecoilState(currentSongState);
   const [lastSong, setLastSong] = useRecoilState(lastSongState);
+  const [isPlaying, setIsPlaying] = useRecoilState(isSongPlayingState);
   const [currentSongId, setCurrentSongId] = useRecoilState(currentSongIdState);
+  const [volume, setVolume] = useState(50);
 
   useEffect(() => {
     const getCurrentSong = async () => {
