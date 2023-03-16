@@ -3,8 +3,6 @@ interface Props {
 }
 
 export function CurrentlyPlaying({ song }: Props) {
-  console.log({ song });
-
   if (!song) return <div />;
 
   return (

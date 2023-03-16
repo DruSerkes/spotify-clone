@@ -1,5 +1,5 @@
-import { useSession } from 'next-auth/react';
 import React, { useEffect, } from 'react'
+import { useSession } from 'next-auth/react';
 import { useRecoilState } from 'recoil';
 import { currentSongIdState, isSongPlayingState } from '../atoms/songAtom';
 import { useSong, useSpotify } from '../libs/hooks'
@@ -41,9 +41,7 @@ export function NowPlayingBar() {
   return (
     <div className='w-full h-full items-center px-5 grid grid-cols-3 text-white text-sm'>
       {song && <CurrentlyPlaying song={song} />}
-
       <SongControls />
-
       <SoundControls />
     </div>
   )
