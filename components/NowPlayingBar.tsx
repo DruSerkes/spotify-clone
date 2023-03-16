@@ -1,8 +1,7 @@
-import { ArrowPathRoundedSquareIcon, ArrowsRightLeftIcon, BackwardIcon, ForwardIcon, PauseCircleIcon, PlayCircleIcon } from '@heroicons/react/24/outline';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, } from 'react'
 import { useRecoilState } from 'recoil';
-import { currentSongIdState, currentSongState, lastSongState, isSongPlayingState } from '../atoms/songAtom';
+import { currentSongIdState, isSongPlayingState } from '../atoms/songAtom';
 import { useSong, useSpotify } from '../libs/hooks'
 import { CurrentlyPlaying } from './CurrentlyPlaying';
 import { SongControls } from './SongControls';
@@ -11,13 +10,10 @@ import { SoundControls } from './SoundControls';
 export function NowPlayingBar() {
   const spotify = useSpotify();
   const { data: session } = useSession();
-  // const [currentSong, setCurrentSong] = useRecoilState(currentSongState);
-  // const [lastSong, setLastSong] = useRecoilState(lastSongState);
   const [isPlaying, setIsPlaying] = useRecoilState(isSongPlayingState);
   const [currentSongId, setCurrentSongId] = useRecoilState(currentSongIdState);
-  const [volume, setVolume] = useState(50);
   const song = useSong();
-  console.log({ isPlaying })
+
   useEffect(() => {
     const getCurrentSong = async () => {
       if (!spotify.getAccessToken()) return;
@@ -44,10 +40,9 @@ export function NowPlayingBar() {
 
   return (
     <div className='w-full h-full items-center px-5 grid grid-cols-3 text-white text-sm'>
-      {/* <CurrentlyPlaying song={currentSong ? currentSong : lastSong as SpotifyApi.TrackObjectFull} /> */}
       {song && <CurrentlyPlaying song={song} />}
 
-      <SongControls isPlaying={isPlaying} />
+      <SongControls />
 
       <SoundControls />
     </div>

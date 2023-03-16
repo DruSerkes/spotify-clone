@@ -5,14 +5,14 @@ import { useSpotify } from "../libs/hooks";
 import { apiErrorMessage } from "../atoms/errorAtom";
 import { PREMIUM_REQUIRED } from "../vars/errors";
 import { RepeatState } from "../types/types";
+import { isSongPlayingState } from "../atoms/songAtom";
 
-interface Props {
-  isPlaying: boolean;
-}
+interface Props { }
 
-export function SongControls({ isPlaying }: Props) {
+export function SongControls() {
   const spotify = useSpotify();
   const [repeatState, setRepeatState] = useState<RepeatState>('off');
+  const [isPlaying, setIsPlaying] = useRecoilState(isSongPlayingState);
   const [isShuffling, setIsShuffling] = useState(false);
   const [_, setErrorMessage] = useRecoilState(apiErrorMessage);
 
@@ -36,19 +36,16 @@ export function SongControls({ isPlaying }: Props) {
     }
   };
 
-  const handleClickPause = async () => {
+  const handleClickPausePlay = async () => {
     try {
-      await spotify.pause()
-    } catch (e: any) {
-      console.log(e);
-      if (e?.body?.error?.reason === PREMIUM_REQUIRED) return setErrorMessage('Spotify Premium is required to perform that command')
-      setErrorMessage('Something went wrong. Please refresh and try again');
-    }
-  };
+      const data = await spotify.getMyCurrentPlaybackState()
+      if (data.body.is_playing) {
+        await spotify.pause();
+        return setIsPlaying(false);
+      };
 
-  const handleClickPlay = async () => {
-    try {
-      await spotify.play()
+      await spotify.play();
+      return setIsPlaying(true);
     } catch (e: any) {
       console.log(e);
       if (e?.body?.error?.reason === PREMIUM_REQUIRED) return setErrorMessage('Spotify Premium is required to perform that command')
@@ -94,7 +91,7 @@ export function SongControls({ isPlaying }: Props) {
       <div className='flex items-center justify-center space-x-3'>
         <ArrowsRightLeftIcon className={`control-btn text-gray-400 hover:text-gray-300 ${isShuffling ? 'text-gray-300' : ''}`} onClick={handleClickShuffle} />
         <BackwardIcon className='control-btn text-black fill-gray-400 hover:fill-gray-300' onClick={handleGoToPrevious} />
-        {isPlaying ? <PauseIcon className='control-btn-lg' onClick={handleClickPause} /> : <PlayIcon className='control-btn-lg' onClick={handleClickPlay} />}
+        {isPlaying ? <PauseIcon className='control-btn-lg' onClick={handleClickPausePlay} /> : <PlayIcon className='control-btn-lg' onClick={handleClickPausePlay} />}
         <ForwardIcon className='control-btn text-black fill-gray-400 hover:fill-gray-300' onClick={handleGoToNext} />
         <ArrowPathRoundedSquareIcon
           className={`control-btn text-gray-400 hover:text-gray-300 ${(repeatState === 'context' || repeatState === 'track') ? 'text-gray-300' : ''} ${repeatState === 'track' ? 'track-repeat' : ''}`}
