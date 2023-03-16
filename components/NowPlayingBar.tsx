@@ -2,17 +2,18 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil';
 import { currentSongIdState, currentSongState, lastSongState, isSongPlayingState } from '../atoms/songAtom';
-import { useSpotify } from '../libs/hooks'
+import { useSong, useSpotify } from '../libs/hooks'
 import { CurrentlyPlaying } from './CurrentlyPlaying';
 
 export function NowPlayingBar() {
   const spotify = useSpotify();
   const { data: session } = useSession();
-  const [currentSong, setCurrentSong] = useRecoilState(currentSongState);
-  const [lastSong, setLastSong] = useRecoilState(lastSongState);
+  // const [currentSong, setCurrentSong] = useRecoilState(currentSongState);
+  // const [lastSong, setLastSong] = useRecoilState(lastSongState);
   const [isPlaying, setIsPlaying] = useRecoilState(isSongPlayingState);
   const [currentSongId, setCurrentSongId] = useRecoilState(currentSongIdState);
   const [volume, setVolume] = useState(50);
+  const song = useSong();
 
   useEffect(() => {
     const getCurrentSong = async () => {
@@ -23,22 +24,22 @@ export function NowPlayingBar() {
         // If not currently listening, use most recently played song
         if (!track.body) {
           const track = await spotify.getMyRecentlyPlayedTracks();
-          return setLastSong(track.body.items[0].track)
+          return setCurrentSongId(track.body.items[0].track.id);
         };
 
-        setCurrentSong(track.body.item as SpotifyApi.TrackObjectFull);
         setCurrentSongId(track.body.item?.id ?? '');
       } catch (e) {
         console.log(e);
       }
     };
 
-    if (!currentSong && !lastSong) getCurrentSong();
-  }, [currentSong, spotify, session]);
+    if (!song) getCurrentSong();
+  }, [spotify, session, currentSongId]);
 
   return (
     <div className='w-full h-full items-center px-5 grid grid-cols-3 text-white text-sm'>
-      <CurrentlyPlaying song={currentSong ? currentSong : lastSong as SpotifyApi.TrackObjectFull} />
+      {/* <CurrentlyPlaying song={currentSong ? currentSong : lastSong as SpotifyApi.TrackObjectFull} /> */}
+      {song && <CurrentlyPlaying song={song} />}
 
       <div className='flex justify-center'>
         Controls
