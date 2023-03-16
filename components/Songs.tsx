@@ -16,7 +16,7 @@ export function Songs({ playlist }: Props) {
           </div>
           <div className="flex items-center justify-between ml-auto md:ml-0">
             <p className="hidden md:inline">Album</p>
-            <p className="hidden md:inline">Date Added</p>
+            {playlist.tracks.items.some(song => !!song.added_at) && <p className="hidden md:inline">Date Added</p>}
             <p><ClockIcon className="h-5 w-5" /></p>
           </div>
         </div>

@@ -66,9 +66,11 @@ export function Song({ song, order }: Props) {
           {song.track?.album.name}
         </p>
 
-        <p className="hidden md:inline w-36 lg:w-44 truncate">
-          {new Date(song.added_at).toDateString()}
-        </p>
+        {!!song.added_at && (
+          <p className="hidden md:inline w-36 lg:w-44 truncate">
+            {new Date(song.added_at).toDateString()}
+          </p>
+        )}
 
         <p className="">
           {song.track?.duration_ms ? msToDuration(song.track.duration_ms) : ''}
