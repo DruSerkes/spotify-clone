@@ -10,9 +10,10 @@ import { PREMIUM_REQUIRED } from "../vars/errors";
 interface Props {
   song: SpotifyApi.PlaylistTrackObject;
   order: number;
+  showAddedDate: boolean;
 }
 
-export function Song({ song, order }: Props) {
+export function Song({ song, order, showAddedDate }: Props) {
   const spotify = useSpotify();
   const [isHovering, setIsHovering] = useState(false);
   const [currentSongId, setCurrentSongId] = useRecoilState(currentSongIdState);
@@ -67,9 +68,11 @@ export function Song({ song, order }: Props) {
         </p>
 
 
-        <p className="hidden md:inline w-36 lg:w-44 truncate">
-          {new Date(song.added_at).toDateString()}
-        </p>
+        {showAddedDate && (
+          <p className="hidden md:inline w-36 lg:w-44 truncate">
+            {new Date(song.added_at).toDateString()}
+          </p>
+        )}
 
         <p className="">
           {song.track?.duration_ms ? msToDuration(song.track.duration_ms) : ''}

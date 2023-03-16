@@ -6,6 +6,8 @@ interface Props {
 };
 
 export function Songs({ playlist }: Props) {
+  const shouldShowAdded = playlist.tracks.items.every(song => !!song.added_by.id);
+
   return (
     <section className="p-8 min-h-[50%]">
       <div className="w-full">
@@ -16,12 +18,12 @@ export function Songs({ playlist }: Props) {
           </div>
           <div className="flex items-center justify-between ml-auto md:ml-0">
             <p className="hidden md:inline">Album</p>
-            <p className="hidden md:inline">Date Added</p>
+            {shouldShowAdded && <p className="hidden md:inline">Date Added</p>}
             <p><ClockIcon className="h-5 w-5" /></p>
           </div>
         </div>
         <div className="flex flex-col justify-evenly">
-          {playlist.tracks.items.map((song, i) => song.track ? <Song song={song} order={i + 1} key={song.track.id} /> : null)}
+          {playlist.tracks.items.map((song, i) => song.track ? <Song song={song} order={i + 1} key={song.track.id} showAddedDate={shouldShowAdded} /> : null)}
         </div>
       </div>
     </section>
