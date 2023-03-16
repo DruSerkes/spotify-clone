@@ -6,6 +6,7 @@ import { apiErrorMessage } from "../atoms/errorAtom";
 import { PREMIUM_REQUIRED } from "../vars/errors";
 import { RepeatState } from "../types/types";
 import { isSongPlayingState } from "../atoms/songAtom";
+import { handleError } from "../libs/helpers";
 
 interface Props { }
 
@@ -20,9 +21,7 @@ export function SongControls() {
     try {
       await spotify.skipToPrevious()
     } catch (e: any) {
-      console.log(e);
-      if (e?.body?.error?.reason === PREMIUM_REQUIRED) return setErrorMessage('Spotify Premium is required to perform that command')
-      setErrorMessage('Something went wrong. Please refresh and try again');
+      handleError(e, setErrorMessage);
     }
   };
 
@@ -30,9 +29,7 @@ export function SongControls() {
     try {
       await spotify.skipToNext()
     } catch (e: any) {
-      console.log(e);
-      if (e?.body?.error?.reason === PREMIUM_REQUIRED) return setErrorMessage('Spotify Premium is required to perform that command')
-      setErrorMessage('Something went wrong. Please refresh and try again');
+      handleError(e, setErrorMessage);
     }
   };
 
@@ -47,9 +44,7 @@ export function SongControls() {
       await spotify.play();
       return setIsPlaying(true);
     } catch (e: any) {
-      console.log(e);
-      if (e?.body?.error?.reason === PREMIUM_REQUIRED) return setErrorMessage('Spotify Premium is required to perform that command')
-      setErrorMessage('Something went wrong. Please refresh and try again');
+      handleError(e, setErrorMessage);
     }
   };
 
@@ -58,9 +53,7 @@ export function SongControls() {
       await spotify.setShuffle(!isShuffling);
       setIsShuffling(!isShuffling);
     } catch (e: any) {
-      console.log(e);
-      if (e?.body?.error?.reason === PREMIUM_REQUIRED) return setErrorMessage('Spotify Premium is required to perform that command')
-      setErrorMessage('Something went wrong. Please refresh and try again');
+      handleError(e, setErrorMessage);
     }
   };
 
@@ -80,14 +73,12 @@ export function SongControls() {
           break;
       }
     } catch (e: any) {
-      console.log(e);
-      if (e?.body?.error?.reason === PREMIUM_REQUIRED) return setErrorMessage('Spotify Premium is required to perform that command')
-      setErrorMessage('Something went wrong. Please refresh and try again');
+      handleError(e, setErrorMessage);
     }
   }, [repeatState]);
 
   return (
-    <div className='flex flex-col justify-center'>
+    <div className='flex flex-col justify-center space-y-3'>
       <div className='flex items-center justify-center space-x-3'>
         <ArrowsRightLeftIcon className={`control-btn text-gray-400 hover:text-gray-300 ${isShuffling ? 'text-gray-300' : ''}`} onClick={handleClickShuffle} />
         <BackwardIcon className='control-btn text-black fill-gray-400 hover:fill-gray-300' onClick={handleGoToPrevious} />
@@ -99,7 +90,8 @@ export function SongControls() {
         />
       </div>
 
-      <div className='flex justify-center items-center'>
+      {/* TODO: Playback time Bar */}
+      <div className='flex justify-center items-center w-full h-1 bg-gray-300 rounded-md'>
 
       </div>
     </div>

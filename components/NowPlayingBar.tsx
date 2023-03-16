@@ -6,18 +6,21 @@ import { useSong, useSpotify } from '../libs/hooks'
 import { CurrentlyPlaying } from './CurrentlyPlaying';
 import { SongControls } from './SongControls';
 import { SoundControls } from './SoundControls';
+import { handleError } from '../libs/helpers';
+import { apiErrorMessage } from '../atoms/errorAtom';
 
 export function NowPlayingBar() {
   const spotify = useSpotify();
   const { data: session } = useSession();
   const [isPlaying, setIsPlaying] = useRecoilState(isSongPlayingState);
   const [currentSongId, setCurrentSongId] = useRecoilState(currentSongIdState);
+  const [_, setErrorMessage] = useRecoilState(apiErrorMessage);
   const song = useSong();
 
   useEffect(() => {
     const getCurrentSong = async () => {
       if (!spotify.getAccessToken()) return;
-
+      console.log("Running");
       try {
         const currentPlaybackState = await spotify.getMyCurrentPlaybackState();
         setIsPlaying(currentPlaybackState.body?.is_playing);
@@ -31,11 +34,11 @@ export function NowPlayingBar() {
 
         setCurrentSongId(track.body.item?.id ?? '');
       } catch (e) {
-        console.log(e);
+        handleError(e, setErrorMessage);
       }
     };
 
-    if (!currentSongId || !song) getCurrentSong();
+    getCurrentSong();
   }, [spotify, session, currentSongId]);
 
   return (

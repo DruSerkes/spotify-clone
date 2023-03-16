@@ -3,13 +3,16 @@ import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { useRecoilState } from 'recoil'
+import { apiErrorMessage } from '../atoms/errorAtom'
 import { playlistIdState } from '../atoms/playlistAtom'
+import { handleError } from '../libs/helpers'
 import { useSpotify } from '../libs/hooks'
 import { SidebarButton } from './SidebarButton'
 
 function Sidebar() {
   const { data: session } = useSession();
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
+  const [_, setErrorMessage] = useRecoilState(apiErrorMessage);
   const [playlists, setPlaylists] = useState<SpotifyApi.PlaylistObjectSimplified[]>([]);
   const hasFetchedPlaylists = useRef(false);
   const spotify = useSpotify();
@@ -22,8 +25,8 @@ function Sidebar() {
         const res = await spotify.getUserPlaylists({ limit: 30 });
         setPlaylists(res.body.items);
         hasFetchedPlaylists.current = true;
-      } catch (error) {
-        console.log(error);
+      } catch (e) {
+        handleError(e, setErrorMessage);
       }
     }
 

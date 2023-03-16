@@ -2,6 +2,7 @@ import { SpeakerWaveIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { apiErrorMessage } from "../atoms/errorAtom";
+import { handleError } from "../libs/helpers";
 import { useSpotify } from "../libs/hooks";
 import { PREMIUM_REQUIRED } from "../vars/errors";
 
@@ -20,9 +21,7 @@ export function SoundControls() {
       try {
         await spotify.setVolume(volume);
       } catch (e: any) {
-        console.log(e);
-        if (e?.body?.error?.reason === PREMIUM_REQUIRED) return setErrorMessage('Spotify Premium is required to perform that command')
-        setErrorMessage('Something went wrong. Please refresh and try again');
+        handleError(e, setErrorMessage);
       }
     }, 300);
     return () => {

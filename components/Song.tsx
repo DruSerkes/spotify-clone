@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { apiErrorMessage } from "../atoms/errorAtom";
 import { currentSongIdState, isSongPlayingState } from "../atoms/songAtom";
-import { msToDuration } from "../libs/helpers";
+import { handleError, msToDuration } from "../libs/helpers";
 import { useSpotify } from "../libs/hooks";
 import { PREMIUM_REQUIRED } from "../vars/errors";
 
@@ -30,12 +30,8 @@ export function Song({ song, order }: Props) {
     try {
       await spotify.play({ uris: [song.track.uri] });
       setCurrentSongId(song.track?.id ?? '');
-      setIsPlaying(true);
     } catch (e: any) {
-      console.log(e);
-      if (e?.body?.error?.reason === PREMIUM_REQUIRED) return setErrorMessage('Spotify Premium is required to perform that command')
-
-      setErrorMessage('Something went wrong. Please refresh and try again');
+      handleError(e, setErrorMessage);
     }
   }, [song]);
 

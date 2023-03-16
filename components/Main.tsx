@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
 import { apiErrorMessage } from "../atoms/errorAtom";
 import { playlistIdState, playlistState } from "../atoms/playlistAtom";
+import { handleError } from "../libs/helpers";
 import { useSpotify } from "../libs/hooks";
 import { ErrorModal } from "./ErrorModal";
 import { HeaderDropdown } from "./HeaderDropdown";
@@ -46,8 +47,8 @@ export const Main = () => {
       try {
         const res = await spotify.getPlaylist(playlistId);
         setPlaylist(res.body);
-      } catch (error) {
-        console.log(error);
+      } catch (e) {
+        handleError(e, setError);
       }
     }
 
