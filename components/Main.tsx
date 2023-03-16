@@ -66,11 +66,13 @@ export const Main = () => {
             <img src={playlist?.images?.[0]?.url} alt="Header Background" className="h-3/5 w-auto shadow-slate-800 shadow-2xl" />
             <div className="space-y-4 flex flex-col justify-end h-3/5">
               <h5>Playlist</h5>
-              <h2 className="text-3xl med:text-5xl lg:text-7xl font-bold">{playlist?.name}</h2>
+              <h2 className="text-2xl md:text-5xl lg:text-7xl font-bold">{playlist?.name}</h2>
 
-              <p className="flex align-middle">
+              <p className="hidden sm:flex items-center">
                 {session?.user?.image && <img src={session.user.image} alt="user" className="rounded-full w-7 h-7 inline mr-2" />}
-                {playlist.owner.display_name} &#x2022; {playlist.tracks.items.length} songs, {!!hours && `${hours} hours`} {!!minutes && `${minutes} min`} {!!seconds && `${seconds} sec`}
+                <span>
+                  {playlist.owner.display_name} &#x2022; {playlist.tracks.items.length} songs, {!!hours && `${hours} hours`} {!!minutes && `${minutes} min`} {!!seconds && `${seconds} sec`}
+                </span>
               </p>
             </div>
           </>

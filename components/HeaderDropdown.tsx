@@ -9,7 +9,7 @@ export function HeaderDropdown() {
   const handleLogout = () => signOut({ callbackUrl: '/login' });
 
   return (
-    <header className="absolute top-4 right-5">
+    <header className="flex justify-end sm:absolute top-4 right-5">
       <div className="bg-black flex space-x-3 items-center opacity-80 cursor-pointer rounded-full p-[0.1rem] pr-2">
         <img src={session?.user?.image ?? undefined} alt="user" className="rounded-full w-9 h-9" />
         <h2 className="font-bold text-sm">{session?.user?.name}</h2>
