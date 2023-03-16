@@ -65,7 +65,7 @@ export const authOptions: AuthOptions = {
         username: token.username,
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
-      };
+      } as typeof session;
     }
   }
 };
