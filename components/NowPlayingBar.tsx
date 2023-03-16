@@ -1,9 +1,12 @@
+import { ArrowPathRoundedSquareIcon, ArrowsRightLeftIcon, BackwardIcon, ForwardIcon, PauseCircleIcon, PlayCircleIcon } from '@heroicons/react/24/outline';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil';
 import { currentSongIdState, currentSongState, lastSongState, isSongPlayingState } from '../atoms/songAtom';
 import { useSong, useSpotify } from '../libs/hooks'
 import { CurrentlyPlaying } from './CurrentlyPlaying';
+import { SongControls } from './SongControls';
+import { SoundControls } from './SoundControls';
 
 export function NowPlayingBar() {
   const spotify = useSpotify();
@@ -14,12 +17,15 @@ export function NowPlayingBar() {
   const [currentSongId, setCurrentSongId] = useRecoilState(currentSongIdState);
   const [volume, setVolume] = useState(50);
   const song = useSong();
-
+  console.log({ isPlaying })
   useEffect(() => {
     const getCurrentSong = async () => {
       if (!spotify.getAccessToken()) return;
 
       try {
+        const currentPlaybackState = await spotify.getMyCurrentPlaybackState();
+        setIsPlaying(currentPlaybackState.body?.is_playing);
+
         const track = await spotify.getMyCurrentPlayingTrack();
         // If not currently listening, use most recently played song
         if (!track.body) {
@@ -33,7 +39,7 @@ export function NowPlayingBar() {
       }
     };
 
-    if (!song) getCurrentSong();
+    if (!currentSongId || !song) getCurrentSong();
   }, [spotify, session, currentSongId]);
 
   return (
@@ -41,13 +47,9 @@ export function NowPlayingBar() {
       {/* <CurrentlyPlaying song={currentSong ? currentSong : lastSong as SpotifyApi.TrackObjectFull} /> */}
       {song && <CurrentlyPlaying song={song} />}
 
-      <div className='flex justify-center'>
-        Controls
-      </div>
+      <SongControls isPlaying={isPlaying} />
 
-      <div className='flex justify-end'>
-        Icons/Volume
-      </div>
+      <SoundControls />
     </div>
   )
 }

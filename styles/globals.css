@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .control-btn {
+    @apply h-8 w-8 cursor-pointer;
+  }
+
+  .control-btn-lg {
+    @apply w-10 h-10 text-black fill-black cursor-pointer bg-gray-100 rounded-full p-2;
+  }
+
+  .track-repeat::after {
+    content: '1';
+    position: absolute;
+    right: 1;
+    bottom: 2;
+    color: whitesmoke;
+  }
+}

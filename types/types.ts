@@ -6,3 +6,5 @@ export type JwtToken = JWT & {
   username: string;
   expirationMs: number
 }
+
+export type RepeatState = 'off' | 'context' | 'track';
