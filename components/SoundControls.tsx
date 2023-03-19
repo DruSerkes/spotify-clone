@@ -29,6 +29,7 @@ export function SoundControls() {
     };
   }, [volume]);
 
+  // TODO: ADD LYRICS
   return (
     <div className='flex justify-end'>
       <div className="w-[40%] flex items-center space-x-1 md:space-x-3">

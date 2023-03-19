@@ -1,9 +1,8 @@
 import { ArrowPathRoundedSquareIcon, ArrowsRightLeftIcon, BackwardIcon, ForwardIcon, PauseCircleIcon, PauseIcon, PlayCircleIcon, PlayIcon } from "@heroicons/react/24/outline";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useRecoilState } from "recoil";
 import { useSpotify } from "../libs/hooks";
 import { apiErrorMessage } from "../atoms/errorAtom";
-import { PREMIUM_REQUIRED } from "../vars/errors";
 import { RepeatState } from "../types/types";
 import { isSongPlayingState } from "../atoms/songAtom";
 import { handleError } from "../libs/helpers";
