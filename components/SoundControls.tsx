@@ -2,16 +2,15 @@ import { MicrophoneIcon, SpeakerWaveIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { apiErrorMessage } from "../atoms/errorAtom";
+import { showLyricsState } from "../atoms/lyricsAtom";
 import { handleError } from "../libs/helpers";
-import { useSongLyrics, useSpotify } from "../libs/hooks";
+import { useSpotify } from "../libs/hooks";
 
-interface Props { }
 
 export function SoundControls() {
   const spotify = useSpotify();
   const [volume, setVolume] = useState(50);
-  const [showLyrics, setShowLyrics] = useState(false);
-  const lyrics = useSongLyrics();
+  const [showLyrics, setShowLyrics] = useRecoilState(showLyricsState);
   const [_, setErrorMessage] = useRecoilState(apiErrorMessage);
   const handleChangeVolume: React.ChangeEventHandler<HTMLInputElement> = (e) => setVolume(Number(e.target.value));
   const handleShowLyrics = () => setShowLyrics(!showLyrics);
@@ -31,11 +30,13 @@ export function SoundControls() {
     };
   }, [volume]);
 
-  // TODO: ADD LYRICS
   return (
     <div className='flex justify-end'>
       <div className="w-[40%] flex items-center space-x-1 md:space-x-3">
-        <MicrophoneIcon className={`control-btn text-gray-400 hover:text-white ${showLyrics ? 'text-green-600 hover:text-green-400' : ''}`} onClick={handleShowLyrics} />
+        <MicrophoneIcon
+          className={`control-btn text-gray-400 hover:text-white ${showLyrics ? 'text-green-600 hover:text-green-400' : ''}`}
+          onClick={handleShowLyrics}
+        />
         <SpeakerWaveIcon className="control-btn" />
         <input
           min={0}
@@ -47,19 +48,6 @@ export function SoundControls() {
           onChange={handleChangeVolume}
         />
       </div>
-      {showLyrics && (
-        <div className="fixed top-0 right-0 w-[84.25%] h-[89%] flex flex-col justify-start items-center
-        bg-[#407CA1] text-4xl font-semibold overflow-y-scroll py-8">
-          {lyrics?.lyrics_body
-            ? (
-              <>
-                {lyrics.lyrics_body.split('\n').map(lyric => <p className="text-gray-900 hover:text-white hover:cursor-pointer px-24 text-left w-full my-3">{lyric.trim()}</p>)}
-                <p className="px-24 text-left w-full my-3 text-base text-black font-light">{lyrics.lyrics_copyright}</p>
-              </>
-            )
-            : <h3 className="text-white">Lyrics Not Found</h3>}
-        </div>
-      )}
     </div>
   )
 }

@@ -58,7 +58,6 @@ export const useSongLyrics = () => {
       try {
         const res = await fetch(`/api/lyrics?track=${song.name}&artist=${song.artists[0].name}`);
         const { lyrics } = await res.json();
-        console.log({ lyrics })
         setLyrics(lyrics);
       } catch (e: any) {
         handleError(e, setError);

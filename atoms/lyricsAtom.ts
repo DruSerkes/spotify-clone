@@ -9,4 +9,9 @@ export const lyricsState = atom({
 export const lyricsTrackState = atom({
   key: 'lyricsTrackState',
   default: null as TrackState | null
+});
+
+export const showLyricsState = atom({
+  key: 'showLyricsState',
+  default: false
 })
