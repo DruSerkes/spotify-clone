@@ -48,10 +48,16 @@ export function SoundControls() {
         />
       </div>
       {showLyrics && (
-        <div className="fixed top-0 right-0 w-[84.25%] h-[89%] flex justify-center items-center bg-[#407CA1] text-white">
+        <div className="fixed top-0 right-0 w-[84.25%] h-[89%] flex flex-col justify-start items-center
+        bg-[#407CA1] text-4xl font-semibold overflow-y-scroll py-8">
           {lyrics?.lyrics_body
-            ? <p>{lyrics.lyrics_body}</p>
-            : <h3 className="text-4xl">Lyrics Not Found</h3>}
+            ? (
+              <>
+                {lyrics.lyrics_body.split('\n').map(lyric => <p className="text-gray-900 hover:text-white hover:cursor-pointer px-24 text-left w-full my-3">{lyric.trim()}</p>)}
+                <p className="px-24 text-left w-full my-3 text-base text-black font-light">{lyrics.lyrics_copyright}</p>
+              </>
+            )
+            : <h3 className="text-white">Lyrics Not Found</h3>}
         </div>
       )}
     </div>
