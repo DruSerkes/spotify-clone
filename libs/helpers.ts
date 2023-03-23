@@ -5,5 +5,5 @@ export const msToDuration = (timeMs: number) => `${Math.floor(timeMs / 60000)}:$
 export const handleError = (e: any, cb: (message: string) => void) => {
   console.log(e);
   if (e?.body?.error?.reason === PREMIUM_REQUIRED) return cb('Spotify Premium is required to perform that command')
-  cb('Something went wrong. Please refresh and try again');
+  cb('Something went wrong.');
 }

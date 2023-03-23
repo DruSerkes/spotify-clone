@@ -1,9 +1,12 @@
 import { signIn, useSession } from "next-auth/react"
+import { NextRequest } from "next/server";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
+import { apiErrorMessage } from "../atoms/errorAtom";
 import { lyricsState } from "../atoms/lyricsAtom";
 import { currentSongIdState } from "../atoms/songAtom";
 import { REFRESH_ACCESS_TOKEN_ERROR } from "../vars/errors";
+import { handleError } from "./helpers";
 import { getLyricsForTrack, searchForTrack } from "./musixmatch";
 import { spotifyApi } from "./spotify";
 
@@ -46,18 +49,20 @@ export const useSong = () => {
 export const useSongLyrics = () => {
   const song = useSong();
   const [lyrics, setLyrics] = useRecoilState(lyricsState);
+  const [_, setError] = useRecoilState(apiErrorMessage);
 
   useEffect(() => {
     const fetchSongLyrics = async () => {
       if (!song) return;
 
-      const trackResponse = await searchForTrack(song.name, song.artists[0].name);
-      console.log({ trackResponse })
-      if (!trackResponse?.body?.track_list?.length || trackResponse?.body?.track_list?.length === 0) return setLyrics(null);
-
-      const track = trackResponse.body.track_list[0].track;
-      const lyrics = await getLyricsForTrack(track.track_id, track.commontrack_id);
-      setLyrics(lyrics.body);
+      try {
+        const res = await fetch(`/api/lyrics?track=${song.name}&artist=${song.artists[0].name}`);
+        const { lyrics } = await res.json();
+        console.log({ lyrics })
+        setLyrics(lyrics);
+      } catch (e: any) {
+        handleError(e, setError);
+      }
     };
 
     fetchSongLyrics();
